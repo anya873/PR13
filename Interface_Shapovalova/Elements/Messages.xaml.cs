@@ -1,27 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Interface_Shapovalova.Classes;
 
 namespace Interface_Shapovalova.Elements
 {
-    /// <summary>
-    /// Логика взаимодействия для Messages.xaml
-    /// </summary>
     public partial class Messages : UserControl
     {
         public MessagesContext ThisMessage;
+
         public Messages(Classes.MessagesContext messages)
         {
             InitializeComponent();
@@ -29,7 +16,19 @@ namespace Interface_Shapovalova.Elements
             Message.Text = messages.Message;
             Date.Text = messages.Create.ToString("dd.MM.yyyy");
         }
-        private void DeleteMessage(object sender, System.Windows.Input.MouseButtonEventArgs e)
+
+        private void EditMessage(object sender, MouseButtonEventArgs e)
+        {
+            MainWindow.mainWindow.Message.Text = ThisMessage.Message;
+
+            ThisMessage.Delete();
+            MainWindow.mainWindow.parentMessage.Children.Remove(this);
+
+            MainWindow.mainWindow.Message.Focus();
+            MainWindow.mainWindow.Message.CaretIndex = MainWindow.mainWindow.Message.Text.Length;
+        }
+
+        private void DeleteMessage(object sender, MouseButtonEventArgs e)
         {
             ThisMessage.Delete();
             MainWindow.mainWindow.parentMessage.Children.Remove(this);
