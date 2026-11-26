@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 using Interface_Shapovalova.Classes;
+using Microsoft.Win32;
 
 namespace Interface_Shapovalova
 {
@@ -11,6 +12,8 @@ namespace Interface_Shapovalova
         public MessagesContext messagesContext = new MessagesContext();
         public int IdSelectUser = -1;
         public static MainWindow mainWindow;
+
+        private string selectedImagePath = null;
 
         public MainWindow()
         {
@@ -35,15 +38,30 @@ namespace Interface_Shapovalova
                 parentMessage.Children.Add(new Elements.Messages(Messages));
         }
 
+        private void SelectImage_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "Изображения (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg";
+
+            if (dialog.ShowDialog() == true)
+            {
+                selectedImagePath = dialog.FileName;
+            }
+        }
+
         private void SendMessages(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == System.Windows.Input.Key.Enter)
             {
                 if (IdSelectUser == -1) return;
+                if (string.IsNullOrWhiteSpace(Message.Text) && selectedImagePath == null) return;
 
-                MessagesContext newMessages = new MessagesContext(Message.Text, DateTime.Now, IdSelectUser);
+                MessagesContext newMessages = new MessagesContext(Message.Text, DateTime.Now, IdSelectUser, selectedImagePath);
                 newMessages.Save();
+
                 Message.Text = "";
+                selectedImagePath = null;
+
                 parentMessage.Children.Clear();
                 foreach (MessagesContext Messages in MessagesContext.AllMessages.FindAll(x => x.IdUser == IdSelectUser))
                     parentMessage.Children.Add(new Elements.Messages(Messages));

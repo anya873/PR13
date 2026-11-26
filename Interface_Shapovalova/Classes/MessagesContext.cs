@@ -9,9 +9,10 @@ namespace Interface_Shapovalova.Classes
     {
         public static List<Messages> AllMessages = new List<Messages>();
 
-        public MessagesContext() { }
+        public MessagesContext() : base(null, DateTime.Now, 0) { }
 
-        public MessagesContext(string Message, DateTime Create, int IdUser) : base(Message, Create, IdUser) { }
+        public MessagesContext(string Message, DateTime Create, int IdUser, string ImagePath = null)
+            : base(Message, Create, IdUser, ImagePath) { }
 
         public void All(out List<Messages> Messages) => Messages = AllMessages;
 
